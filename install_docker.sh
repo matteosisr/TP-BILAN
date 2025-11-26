@@ -3,8 +3,7 @@
 echo "=== Mise a jour du systeme ==="
 apt update && apt upgrade -y
 
-echo "=== Installation des dependances necessaires ==="
-apt install ca-certificates curl gnupg lsb-release dpkg -y
+apt install ca-certificates curl dpkg -y
 
 echo "=== Ajout du depot Docker ==="
 wget https://download.docker.com/linux/debian | tee /etc/apt/sources.list.d/docker.list > /dev/null

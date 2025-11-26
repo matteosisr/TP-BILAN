@@ -1,0 +1,48 @@
+version: '3.5'
+services:
+  zabbix-server:
+    image: zabbix/zabbix-server-mysql:latest
+    depends_on:
+      - mysql-server
+    ports:
+      - "10051:10051"
+    environment:
+      MYSQL_DATABASE: zabbix
+      MYSQL_USER: zabbix
+      MYSQL_PASSWORD: sio2025
+      MYSQL_ROOT_PASSWORD: Sio2025
+      DB_SERVER_HOST: mysql-server
+      ZBX_JAVAGATEWAY_ENABLE: "true"
+    volumes:
+      - ./zabbix/alertscripts:/usr/lib/zabbix/alertscripts
+      - ./zabbix/externalscripts:/usr/lib/zabbix/externalscripts
+    restart: always
+
+  zabbix-web-apache:
+    image: zabbix/zabbix-web-apache-mysql:latest
+    depends_on:
+      - zabbix-server
+    ports:
+      - "9090:8080"
+    environment:
+      MYSQL_DATABASE: zabbix
+      MYSQL_USER: zabbix
+      MYSQL_PASSWORD: sio2025
+      MYSQL_ROOT_PASSWORD: Sio2025
+      ZBX_SERVER_HOST: zabbix-server
+      PHP_TZ: Europe/Paris
+    restart: always
+
+  mysql-server:
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE: zabbix
+      MYSQL_USER: zabbix
+      MYSQL_PASSWORD: sio2025
+      MYSQL_ROOT_PASSWORD: Sio2025
+    volumes:
+      - mysql_data:/var/lib/mysql
+    restart: always
+
+volumes:
+  mysql_data:
